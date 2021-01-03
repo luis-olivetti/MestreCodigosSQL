@@ -4,7 +4,7 @@
 
 Torne-se um escudeiro superando todos os desafios a seguir ;)
 
-QUESTÕES QUE FALTA FAZER: 4, 5, 19 e 20.
+QUESTÕES QUE FALTA FAZER: 4, 5.
 
 1. Crie um modelo de dados no formato de DER contendo pelo menos 10 tabelas, sendo que pelo menos uma tabela deve conter chave composta; Criar ligações entre as tabelas com relacionamentos N:N e 1:N.
 
@@ -362,7 +362,7 @@ where
 	vendas.clienteID = cliente.id;
 ```
 
-19. A tabela `cliente` do produto que você trabalha, possuí os seguintes campos:
+19. A tabela `cliente` do produto que você trabalha, possui os seguintes campos:
 
    Nome;
    Telefone;
@@ -376,34 +376,71 @@ Com o aumento da complexidade do produto, surgiu a necessidade de criar uma estr
 
 CORREÇÃO:
 
-		endereco
-		--------
-		id
-		rua
-		numero
-		complemento
-		bairro
-		cidadeID
-		
-		cidade
-		--------
-		id
-		nome
-		estadoID
-		
-		estado
-		--------
-		id
-		nome
-		
-		cliente
-		---------
-		id
-		nome
-		telefone
-		email
-		enderecoID
-		
-		usuario, fornecedor e funcionario também possuem o campo enderecoID com chave estrangeira
+![DER](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DER_ENDERECO.png?raw=true)
 
 20. Com base no modelo anterior de endereços, crie os códigos DDL para criação das tabelas e os cuidados tomados com normalização e com a criação de índices;
+
+CORREÇÃO:
+
+```sql
+CREATE TABLE ESTADO
+(
+	IDESTADO INTEGER PRIMARY KEY NOT NULL,
+	NOME VARCHAR(100) NOT NULL,
+	SIGLA CHAR(2)
+);
+
+CREATE TABLE CIDADE
+(
+	IDCIDADE INTEGER PRIMARY KEY NOT NULL,
+	IDESTADO INTEGER NOT NULL,
+	NOME VARCHAR(100) NOT NULL,
+	FOREIGN KEY (IDESTADO) REFERENCES ESTADO (IDESTADO)
+);
+
+CREATE TABLE ENDERECO
+(
+	IDENDERECO INTEGER PRIMARY KEY NOT NULL,
+	IDCIDADE INTEGER NOT NULL,
+	RUA VARCHAR(100) NOT NULL,
+	NUMERO VARCHAR(10) NOT NULL,
+	COMPLEMENTO VARCHAR(100) NULL,
+	BAIRRO VARCHAR(80) NOT NULL,
+	CEP VARCHAR(8) NULL,
+	FOREIGN KEY (IDCIDADE) REFERENCES CIDADE (IDCIDADE)	
+);
+
+CREATE TABLE CLIENTE
+(
+	IDCLIENTE INTEGER PRIMARY KEY NOT NULL,
+	NOME VARCHAR(100) NOT NULL,
+	TELEFONE VARCHAR(20) NULL,
+	EMAIL VARCHAR(150) NULL,
+	IDENDERECO INTEGER NOT NULL,
+	FOREIGN KEY (IDENDERECO) REFERENCES ENDERECO (IDENDERECO)	
+);
+
+CREATE TABLE USUARIO
+(
+	IDUSUARIO INTEGER PRIMARY KEY NOT NULL,
+	NOME VARCHAR(100) NOT NULL,
+	IDENDERECO INTEGER NOT NULL,
+	FOREIGN KEY (IDENDERECO) REFERENCES ENDERECO (IDENDERECO)	
+);
+
+CREATE TABLE FORNECEDOR
+(
+	IDFORNECEDOR INTEGER PRIMARY KEY NOT NULL,
+	NOME VARCHAR(100) NOT NULL,
+	IDENDERECO INTEGER NOT NULL,
+	FOREIGN KEY (IDENDERECO) REFERENCES ENDERECO (IDENDERECO)	
+);
+
+CREATE TABLE FUNCIONARIO
+(
+	IDFUNCIONARIO INTEGER PRIMARY KEY NOT NULL,
+	NOME VARCHAR(100) NOT NULL,
+	IDENDERECO INTEGER NOT NULL,
+	FOREIGN KEY (IDENDERECO) REFERENCES ENDERECO (IDENDERECO)	
+);
+```
