@@ -4,9 +4,11 @@
 
 Torne-se um escudeiro superando todos os desafios a seguir ;)
 
-QUESTÕES QUE FALTA FAZER: 1, 2, 3, 4, 5, 19 e 20.
+QUESTÕES QUE FALTA FAZER: 2, 3, 4, 5, 19 e 20.
 
 1. Crie um modelo de dados no formato de DER contendo pelo menos 10 tabelas, sendo que pelo menos uma tabela deve conter chave composta; Criar ligações entre as tabelas com relacionamentos N:N e 1:N.
+
+![alt text](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DER.png?raw=true)
 
 2. Com base no modelo criado no exercício 1, crie os códigos DDL para a criação das tabelas e os cuidados tomados com normalização e com a criação de índices;
 
