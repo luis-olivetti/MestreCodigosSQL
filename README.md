@@ -10,13 +10,13 @@ QUESTÕES QUE FALTA FAZER: 4, 5, 19 e 20.
 
 DER baseado em um sistema universitário de horas complementares
 
-![alt text](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DER.png?raw=true)
+![DER](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DER.png?raw=true)
 
 2. Com base no modelo criado no exercício 1, crie os códigos DDL para a criação das tabelas e os cuidados tomados com normalização e com a criação de índices;
 
-![alt text](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DDL.sql)
+![Link para o código DDL](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DDL.sql)
 
-![alt text](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/AlimentarTabelas.sql)
+![Link para o código que alimenta as entidades](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/AlimentarTabelas.sql)
 
 3. Extrair um relatório do modelo de dados criado no exercício 1, utilizando 3 funções de agregação diferentes, e filtrando por pelo menos uma função agregadora;
 
