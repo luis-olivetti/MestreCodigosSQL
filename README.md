@@ -4,15 +4,37 @@
 
 Torne-se um escudeiro superando todos os desafios a seguir ;)
 
-QUESTÕES QUE FALTA FAZER: 2, 3, 4, 5, 19 e 20.
+QUESTÕES QUE FALTA FAZER: 4, 5, 19 e 20.
 
 1. Crie um modelo de dados no formato de DER contendo pelo menos 10 tabelas, sendo que pelo menos uma tabela deve conter chave composta; Criar ligações entre as tabelas com relacionamentos N:N e 1:N.
+
+DER baseado em um sistema universitário de horas complementares
 
 ![alt text](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DER.png?raw=true)
 
 2. Com base no modelo criado no exercício 1, crie os códigos DDL para a criação das tabelas e os cuidados tomados com normalização e com a criação de índices;
 
 3. Extrair um relatório do modelo de dados criado no exercício 1, utilizando 3 funções de agregação diferentes, e filtrando por pelo menos uma função agregadora;
+
+```sql
+  SELECT
+    L.IDPESSOA,
+    P.NOME,
+    (SELECT COUNT(1) FROM LANCAMENTO WHERE IDPESSOA = L.IDPESSOA AND STATUS <> 'R') QTD_LANCAMENTOS_VALIDOS,
+    (SELECT COUNT(1) FROM LANCAMENTO WHERE IDPESSOA = L.IDPESSOA AND STATUS = 'R') QTD_LANCAMENTOS_INVALIDOS,
+    (SELECT COALESCE(SUM(TOTALHORAS), 0) FROM LANCAMENTO WHERE IDPESSOA = L.IDPESSOA AND STATUS <> 'R') TOTALHORAS_VALIDAS,
+    (SELECT COALESCE(SUM(TOTALHORAS), 0) FROM LANCAMENTO WHERE IDPESSOA = L.IDPESSOA AND STATUS = 'R') TOTALHORAS_INVALIDAS,
+    (SELECT COALESCE(MIN(TOTALHORAS), 0) FROM LANCAMENTO WHERE IDPESSOA = L.IDPESSOA AND STATUS <> 'R') MENOR_LANC_VALIDO,
+    (SELECT COALESCE(MAX(TOTALHORAS), 0) FROM LANCAMENTO WHERE IDPESSOA = L.IDPESSOA AND STATUS <> 'R') MAIOR_LANC_VALIDO
+  FROM
+    LANCAMENTO L
+  JOIN
+    PESSOA P ON L.IDPESSOA = P.IDPESSOA
+  GROUP BY
+    L.IDPESSOA
+  HAVING
+    AVG(TOTALHORAS_VALIDAS) BETWEEN 6 AND 10;
+```
 
 4. Criar uma query hierárquica, ordenando os registros por uma coluna específica;
 
