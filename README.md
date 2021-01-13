@@ -4,6 +4,8 @@
 
 Torne-se um escudeiro superando todos os desafios a seguir ;)
 
+Observação: Nesta prova foi utilizado o banco SQLite.
+
 1. Crie um modelo de dados no formato de DER contendo pelo menos 10 tabelas, sendo que pelo menos uma tabela deve conter chave composta; Criar ligações entre as tabelas com relacionamentos N:N e 1:N.
 
 RESOLUÇÃO:
@@ -373,17 +375,17 @@ RESOLUÇÃO:
 14. Muitas vezes queremos buscar um registro no banco de dados mas não sabemos o termo completo que queremos consultar. Ex: Você foi instruído para consultar o nome de todos os clientes que possuem o texto "Souza" no nome. Para isso você recebeu o comando abaixo incorreto. Análise a consulta e reescreva da maneira correta.
 
 ```sql
-		SELECT nome
-        FROM cliente
-        WHERE nome = '>Souza'
+      SELECT nome
+      FROM cliente
+      WHERE nome = '>Souza'
 ```
 
 RESOLUÇÃO:
 
 ```sql
 		SELECT nome
-        FROM cliente
-        WHERE nome like '%Souza%'
+    FROM cliente
+    WHERE nome like '%Souza%'
 ```
 
 15. A tabela "cliente" foi criada com a estrutura incorreta. Agora você precisa criar um comando para excluir essa tabela do banco de dados. Assinale a alternativa correta.
@@ -399,12 +401,12 @@ RESOLUÇÃO:
 RESOLUÇÃO:
 
 ```sql
-		SELECT 
-			nome
-		FROM
-			cliente
-		WHERE
-			id in ('12', '10', '199', '18', '01', '2016');
+    SELECT 
+      nome
+    FROM
+      cliente
+    WHERE
+      id in ('12', '10', '199', '18', '01', '2016');
 ```
 
 17. Dado que temos as duas tabelas abaixo:
