@@ -4,9 +4,9 @@
 
 Torne-se um escudeiro superando todos os desafios a seguir ;)
 
-QUESTÕES QUE FALTA FAZER: 4, 5.
-
 1. Crie um modelo de dados no formato de DER contendo pelo menos 10 tabelas, sendo que pelo menos uma tabela deve conter chave composta; Criar ligações entre as tabelas com relacionamentos N:N e 1:N.
+
+RESOLUÇÃO:
 
 DER baseado em um sistema universitário de horas complementares
 
@@ -14,11 +14,15 @@ DER baseado em um sistema universitário de horas complementares
 
 2. Com base no modelo criado no exercício 1, crie os códigos DDL para a criação das tabelas e os cuidados tomados com normalização e com a criação de índices;
 
+RESOLUÇÃO:
+
 ![Link para o código DDL](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DDL.sql)
 
 ![Link para o código que alimenta as entidades](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/AlimentarTabelas.sql)
 
 3. Extrair um relatório do modelo de dados criado no exercício 1, utilizando 3 funções de agregação diferentes, e filtrando por pelo menos uma função agregadora;
+
+RESOLUÇÃO:
 
 ```sql
   SELECT
@@ -42,7 +46,143 @@ DER baseado em um sistema universitário de horas complementares
 
 4. Criar uma query hierárquica, ordenando os registros por uma coluna específica;
 
+RESOLUÇÃO:
+
+```sql
+CREATE TABLE TIMES(
+  NOME TEXT PRIMARY KEY,
+  SQUAD TEXT REFERENCES TIMES
+) WITHOUT ROWID;
+
+INSERT INTO TIMES VALUES('Brasil', NULL);
+INSERT INTO TIMES VALUES('Alemanha', NULL);
+INSERT INTO TIMES VALUES('Japão', NULL);
+INSERT INTO TIMES VALUES('Wesley','Japão');
+INSERT INTO TIMES VALUES('Mike','Alemanha');
+INSERT INTO TIMES VALUES('Luis','Alemanha');
+INSERT INTO TIMES VALUES('Messias','Brasil');
+INSERT INTO TIMES VALUES('Roberto','Brasil');
+
+WITH RECURSIVE
+  HIERARQUIA(NOME, level) AS 
+  (
+    VALUES 
+    	('Brasil',0), ('Alemanha',0), ('Japão',0) 
+    UNION
+    SELECT 
+    	T.NOME, H.level + 1 NIVEL
+    FROM 
+    	TIMES T 
+    JOIN 
+    	HIERARQUIA H ON T.SQUAD = H.NOME
+    ORDER BY NIVEL DESC
+  )
+SELECT 
+	SUBSTR('    ', 1, level * 4) || NOME
+FROM 
+	HIERARQUIA;
+	
+/*
+Resultado:
+
+Brasil                              
+    Messias                         
+    Roberto                         
+Alemanha                            
+    Luis                            
+    Mike                            
+Japão                               
+    Wesley
+*/
+```
+
 5. Realize 5 consultas no modelo de dados criado no exercício 1, realizando pelo menos uma das seguintes operações: `Union`, `Intersect`, `Minus`, e utilizando pelo menos 3 tipos diferentes de `joins`;
+
+RESOLUÇÃO:
+
+```sql
+-- Consulta utilizando INNER JOIN e UNION
+SELECT
+	GC.IDCURSO,
+	C.NOME,
+	GC.TOTALHORAS	
+FROM
+	GRADE_CURSO GC
+INNER JOIN
+	CURSO C ON GC.IDCURSO = C.IDCURSO
+UNION
+SELECT
+	999,
+	'Curso de exemplo',
+	0
+ORDER BY
+	NOME;
+
+-- Consulta utilizando INNER JOIN, LEFT JOIN e UNION
+SELECT
+	S.IDCURSO,
+	S.NOME,
+	S.TOTALHORAS
+FROM
+	(
+		SELECT
+			GC.IDCURSO,
+			C.NOME,
+			GC.TOTALHORAS	
+		FROM
+			GRADE_CURSO GC
+		INNER JOIN
+			CURSO C ON GC.IDCURSO = C.IDCURSO
+		UNION 
+		SELECT
+			999,
+			'Curso de exemplo',
+			0
+	) S
+LEFT JOIN
+	CURSO C ON S.IDCURSO = C.IDCURSO;
+
+-- Consulta utilizando CROSS JOIN
+SELECT
+	C.IDCURSO,
+	C.NOME,
+	E.IDEVENTO,
+	E.DESCRICAO
+FROM
+	CURSO C
+CROSS JOIN
+	EVENTO E;
+
+-- Consulta utilizando INTERSECT
+SELECT
+	C.IDCURSO
+FROM
+	CURSO C
+WHERE
+	C.IDCURSO IN (1, 3, 5)
+INTERSECT
+SELECT
+	GC.IDCURSO
+FROM
+	GRADE_CURSO GC
+WHERE
+	GC.IDCURSO IN (1, 3);
+
+-- Consulta utilizando EXCEPT que seria o MINUS do SQLite
+SELECT
+	C.IDCURSO
+FROM
+	CURSO C
+WHERE
+	C.IDCURSO IN (1, 3, 5)
+EXCEPT
+SELECT
+	GC.IDCURSO
+FROM
+	GRADE_CURSO GC
+WHERE
+	GC.IDCURSO IN (1, 3);
+```
 
 6. O que são os comandos DML?
 
@@ -113,7 +253,7 @@ DER baseado em um sistema universitário de horas complementares
         );
 ```
 
-CORREÇÃO: Considerando que não sei a estrutura da tabela `cliente`, estou removendo o valor `0001`.
+RESOLUÇÃO: Considerando que não sei a estrutura da tabela `cliente`, estou removendo o valor `0001`.
 
 ```sql
         insert into cliente(
@@ -144,7 +284,7 @@ CORREÇÃO: Considerando que não sei a estrutura da tabela `cliente`, estou rem
         where id = 3234;
 ```
 
-CORREÇÃO:
+RESOLUÇÃO:
 
 ```sql
         update client set name = 'FULANO DE TAL', cnpj = '17807928000185'
@@ -181,7 +321,7 @@ CORREÇÃO:
             vendedorID  int FOREIGN KEY REFERENCES vendedor(id));
 ```
 
-CORREÇÃO:
+RESOLUÇÃO:
 
 ```sql
 		SELECT
@@ -238,7 +378,7 @@ CORREÇÃO:
         WHERE nome = '>Souza'
 ```
 
-CORREÇÃO:
+RESOLUÇÃO:
 
 ```sql
 		SELECT nome
@@ -256,7 +396,7 @@ CORREÇÃO:
 
 16. É muito comum termos a necessidade de buscar diversas informações utilizando um único comando. Ex: Precisamos trazer em uma única consulta todos os nomes dos clientes referentes aos ids "12", "10", "199", "18", "01", "2016". Construa uma consulta utilizando a tabela "cliente" e o campo "id".
 
-CORREÇÃO:
+RESOLUÇÃO:
 
 ```sql
 		SELECT 
@@ -349,7 +489,7 @@ Após a criação das tabelas foram inseridos os seguintes registros:
 
 O analista responsável pelo gerenciamento do banco de dados precisa excluir a tabela `cliente`. Levando em consideração o relacionamento entre as duas tabelas. Como seria o único comando que iria excluir a tabela `cliente` e `vendas` de uma só vez.
 
-CORREÇÃO:
+RESOLUÇÃO:
 
 ```sql
 delete
@@ -374,13 +514,13 @@ where
 
 Com o aumento da complexidade do produto, surgiu a necessidade de criar uma estrutura de tabelas para armazenar endereços que será utilizada por outras tabelas como `usuario`, `fornecedor` e `funcionario`. Sabendo disso, a sua missão é criar essa nova estrutura de tabelas de endereços que será utilizada nos demais locais do produto. Crie um modelo de dados no formato de DER com as tabelas dessa nova estrutura.
 
-CORREÇÃO:
+RESOLUÇÃO:
 
 ![DER](https://github.com/luis-olivetti/MestreCodigosSQL/blob/main/DER_ENDERECO.png?raw=true)
 
 20. Com base no modelo anterior de endereços, crie os códigos DDL para criação das tabelas e os cuidados tomados com normalização e com a criação de índices;
 
-CORREÇÃO:
+RESOLUÇÃO:
 
 ```sql
 CREATE TABLE ESTADO
